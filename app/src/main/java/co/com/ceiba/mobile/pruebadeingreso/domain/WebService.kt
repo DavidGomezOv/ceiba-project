@@ -15,7 +15,7 @@ interface WebService {
     suspend fun getUserList(): List<User>
 
     @GET(Constants.GET_POST_USER)
-    suspend fun getUserPost(@Query("id") id: Int): List<Post>
+    suspend fun getUserPost(@Query("userId") id: Int): List<Post>
 
 }
 

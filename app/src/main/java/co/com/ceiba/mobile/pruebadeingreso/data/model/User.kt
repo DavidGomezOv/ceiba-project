@@ -1,6 +1,9 @@
 package co.com.ceiba.mobile.pruebadeingreso.data.model
 
 import android.os.Parcelable
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import kotlinx.android.parcel.Parcelize
 
 
@@ -36,3 +39,44 @@ data class Company(
     val catchPhrase: String?,
     val bs: String?
 ) : Parcelable
+
+
+@Entity
+data class UserEntity(
+    @PrimaryKey
+    val id: Int?,
+    @ColumnInfo(name = "name")
+    val name: String?,
+    @ColumnInfo(name = "email")
+    val email: String?,
+    @ColumnInfo(name = "phone")
+    val phone: String?,
+    @ColumnInfo(name = "website")
+    val website: String?,
+)
+
+fun List<UserEntity>.toUserList(): List<User> {
+    val result = mutableListOf<User>()
+    this.forEach {
+        result.add(it.toUser())
+    }
+    return result
+}
+
+fun UserEntity.toUser(): User = User(
+    this.id,
+    this.name,
+    this.email,
+    null,
+    this.phone,
+    this.website,
+    null
+)
+
+fun User.toUserEntity(): UserEntity = UserEntity(
+    this.id,
+    this.name,
+    this.email,
+    this.phone,
+    this.website,
+)

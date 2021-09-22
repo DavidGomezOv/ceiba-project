@@ -7,6 +7,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.get
 import co.com.ceiba.mobile.pruebadeingreso.core.Result
+import co.com.ceiba.mobile.pruebadeingreso.data.local.AppUserDatabase
+import co.com.ceiba.mobile.pruebadeingreso.data.local.UserLocalSource
 import co.com.ceiba.mobile.pruebadeingreso.data.model.User
 import co.com.ceiba.mobile.pruebadeingreso.data.remote.UserApiSource
 import co.com.ceiba.mobile.pruebadeingreso.databinding.ActivityMainBinding
@@ -36,7 +38,8 @@ class MainActivity : AppCompatActivity(), OnClickListenerCardView {
         mainActivityViewModel = ViewModelProvider(
             this, MainActivityViewModelFactory(
                 UserRepositoryImpl(
-                    UserApiSource(RetrofitClient.webService)
+                    UserApiSource(RetrofitClient.webService),
+                    UserLocalSource(AppUserDatabase.getDatabase(applicationContext).userDao())
                 )
             )
         ).get()
