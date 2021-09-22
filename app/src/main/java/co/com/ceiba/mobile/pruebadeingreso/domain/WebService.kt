@@ -2,7 +2,7 @@ package co.com.ceiba.mobile.pruebadeingreso.domain
 
 import co.com.ceiba.mobile.pruebadeingreso.data.model.Post
 import co.com.ceiba.mobile.pruebadeingreso.data.model.User
-import co.com.ceiba.mobile.pruebadeingreso.rest.Endpoints
+import co.com.ceiba.mobile.pruebadeingreso.rest.Constants
 import com.google.gson.GsonBuilder
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -11,11 +11,11 @@ import retrofit2.http.Query
 
 interface WebService {
 
-    @GET("movie/upcoming")
+    @GET(Constants.GET_USERS)
     suspend fun getUserList(): List<User>
 
-    @GET("movie/top_rated")
-    suspend fun getUserPost(@Query("id") id: String): List<Post>
+    @GET(Constants.GET_POST_USER)
+    suspend fun getUserPost(@Query("id") id: Int): List<Post>
 
 }
 
@@ -23,7 +23,7 @@ interface WebService {
 object RetrofitClient {
 
     val webService: WebService by lazy {
-        Retrofit.Builder().baseUrl(Endpoints.URL_BASE)
+        Retrofit.Builder().baseUrl(Constants.URL_BASE)
             .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create())).build()
             .create(WebService::class.java)
     }

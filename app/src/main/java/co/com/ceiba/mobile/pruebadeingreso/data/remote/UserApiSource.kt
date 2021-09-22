@@ -9,6 +9,6 @@ class UserApiSource(private val webService: WebService) {
 
     suspend fun getUserList(): List<User> = webService.getUserList()
 
-    suspend fun getUserPost(id: String): List<Post> = webService.getUserPost(id)
+    suspend fun getUserPost(id: Int): List<Post> = webService.getUserPost(id)
 
 }
