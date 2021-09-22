@@ -1,6 +1,5 @@
 package co.com.ceiba.mobile.pruebadeingreso.ui.adapter
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -9,8 +8,9 @@ import co.com.ceiba.mobile.pruebadeingreso.data.model.User
 import co.com.ceiba.mobile.pruebadeingreso.databinding.UserListItemBinding
 
 class MainActivityAdapter(
-    private val userList: List<User>,
-    private val onClickListener: OnClickListenerCardView
+    private val userList: MutableList<User>,
+    private val onClickListener: OnClickListenerCardView,
+    private var userListTemp: List<User> = userList.toList()
 ) :
     RecyclerView.Adapter<BaseViewHolder<*>>() {
 
@@ -27,6 +27,18 @@ class MainActivityAdapter(
     }
 
     override fun getItemCount(): Int = userList.size
+
+    fun userFilter(filterText: String): List<User> {
+        if (filterText.isEmpty()) return userList
+        userList.clear()
+        for (user in userListTemp) {
+            if (user.name!!.lowercase().contains(filterText.lowercase())) {
+                userList.add(user)
+            }
+        }
+        notifyDataSetChanged()
+        return userList
+    }
 
     private inner class MainActivityViewHolder(
         val binding: UserListItemBinding

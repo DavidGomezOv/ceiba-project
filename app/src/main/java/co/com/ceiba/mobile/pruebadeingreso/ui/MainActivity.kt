@@ -2,6 +2,9 @@ package co.com.ceiba.mobile.pruebadeingreso.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -19,6 +22,7 @@ import co.com.ceiba.mobile.pruebadeingreso.presentation.MainActivityViewModelFac
 import co.com.ceiba.mobile.pruebadeingreso.rest.Constants
 import co.com.ceiba.mobile.pruebadeingreso.ui.adapter.MainActivityAdapter
 import co.com.ceiba.mobile.pruebadeingreso.ui.adapter.OnClickListenerCardView
+import co.com.ceiba.mobile.pruebadeingreso.ui.utils.CustomLoadingDialog
 
 class MainActivity : AppCompatActivity(), OnClickListenerCardView {
 
@@ -26,10 +30,15 @@ class MainActivity : AppCompatActivity(), OnClickListenerCardView {
 
     private lateinit var mainActivityViewModel: MainActivityViewModel
 
+    private lateinit var customLoadingDialog: CustomLoadingDialog
+
+    private lateinit var adapter: MainActivityAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initComponents()
         observer()
+        userFilter()
     }
 
     private fun initComponents() {
@@ -43,25 +52,49 @@ class MainActivity : AppCompatActivity(), OnClickListenerCardView {
                 )
             )
         ).get()
+        adapter = MainActivityAdapter(mutableListOf(), this)
+        customLoadingDialog = CustomLoadingDialog(this)
     }
 
     private fun observer() {
         mainActivityViewModel.getUserList().observe(this, { result ->
             when (result) {
                 is Result.Loading -> {
-                    Toast.makeText(applicationContext, "Cargando...", Toast.LENGTH_SHORT).show()
+                    customLoadingDialog.showLoadingDialog()
                 }
                 is Result.Success -> {
-                    binding.recyclerViewSearchResults.adapter =
-                        MainActivityAdapter(result.data, this)
+                    customLoadingDialog.cancelDialog()
+                    adapter = MainActivityAdapter(result.data.toMutableList(), this)
+                    binding.recyclerViewSearchResults.adapter = adapter
                 }
                 is Result.Failed -> {
-                    println("Error ${result.exception}")
+                    customLoadingDialog.cancelDialog()
                     Toast.makeText(
                         applicationContext,
                         "Error: ${result.exception}",
                         Toast.LENGTH_SHORT
                     ).show()
+                }
+            }
+        })
+    }
+
+    private fun userFilter() {
+        binding.editTextSearch.addTextChangedListener(object : TextWatcher{
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                //Nothing to do
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                //Nothing to do
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                val count = adapter.userFilter(s.toString())
+                if (count.isEmpty()) {
+                    binding.emptyView.root.visibility = View.VISIBLE
+                } else {
+                    binding.emptyView.root.visibility = View.INVISIBLE
                 }
             }
         })
