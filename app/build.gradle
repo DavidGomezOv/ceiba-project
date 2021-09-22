@@ -65,6 +65,9 @@ dependencies {
     implementation("androidx.room:room-ktx:2.3.0")
     kapt("androidx.room:room-compiler:2.3.0")
 
+    //Mockito
+    implementation "org.mockito:mockito-inline:2.28.2"
+
     annotationProcessor 'org.projectlombok:lombok:1.18.20'
     annotationProcessor 'org.parceler:parceler:1.1.13'
     annotationProcessor 'org.projectlombok:lombok:1.18.20'

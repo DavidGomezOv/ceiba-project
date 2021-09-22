@@ -65,7 +65,6 @@ class PostActivity : AppCompatActivity() {
                 when (result) {
                     is Result.Loading -> {
                         customLoadingDialog.showLoadingDialog()
-                        Toast.makeText(applicationContext, "Cargando...", Toast.LENGTH_SHORT).show()
                     }
                     is Result.Success -> {
                         customLoadingDialog.cancelDialog()
@@ -73,7 +72,6 @@ class PostActivity : AppCompatActivity() {
                     }
                     is Result.Failed -> {
                         customLoadingDialog.cancelDialog()
-                        println("Error ${result.exception}")
                         Toast.makeText(
                             applicationContext,
                             "Error: ${result.exception}",
