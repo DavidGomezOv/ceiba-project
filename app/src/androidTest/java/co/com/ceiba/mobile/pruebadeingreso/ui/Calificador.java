@@ -1,4 +1,4 @@
-package co.com.ceiba.mobile.pruebadeingreso.view;
+package co.com.ceiba.mobile.pruebadeingreso.ui;
 
 
 import androidx.test.espresso.ViewInteraction;
