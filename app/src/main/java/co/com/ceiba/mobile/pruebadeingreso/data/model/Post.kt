@@ -5,8 +5,8 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 data class Post(
-    val userId: Int,
     val id: Int,
+    val userId: Int,
     val title: String,
     val body: String
 )
