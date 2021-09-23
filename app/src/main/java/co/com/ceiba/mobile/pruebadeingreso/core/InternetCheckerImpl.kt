@@ -5,9 +5,9 @@ import java.lang.Exception
 import java.net.InetSocketAddress
 import java.net.Socket
 
-object InternetCheck {
+class InternetCheckerImpl: InternetChecker {
 
-    suspend fun isNetworkAvailable() = coroutineScope {
+    override suspend fun isNetworkAvailable() = coroutineScope {
         return@coroutineScope try {
             val sock = Socket()
             val socketAddress = InetSocketAddress("8.8.8.8", 53)

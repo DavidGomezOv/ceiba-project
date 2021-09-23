@@ -8,7 +8,16 @@ import co.com.ceiba.mobile.pruebadeingreso.domain.UserRepository
 import kotlinx.coroutines.Dispatchers
 import java.lang.Exception
 
-class PostActivityViewModel(private val repository: UserRepository): ViewModel() {
+class UserViewModel(private val repository: UserRepository): ViewModel() {
+
+    fun getUserList() = liveData(Dispatchers.IO) {
+        emit(Result.Loading())
+        try {
+            emit(Result.Success(repository.getUserList()))
+        } catch (e: Exception) {
+            emit(Result.Failed(e))
+        }
+    }
 
     fun getUserPost(id: Int) = liveData(Dispatchers.IO) {
         emit(Result.Loading())
@@ -21,7 +30,7 @@ class PostActivityViewModel(private val repository: UserRepository): ViewModel()
 
 }
 
-class PostActivityViewModelFactory(private val repository: UserRepository) : ViewModelProvider.Factory {
+class UserViewModelFactory(private val repository: UserRepository) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return modelClass.getConstructor(UserRepository::class.java).newInstance(repository)

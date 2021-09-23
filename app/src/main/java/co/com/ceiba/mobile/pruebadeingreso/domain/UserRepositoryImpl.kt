@@ -1,6 +1,6 @@
 package co.com.ceiba.mobile.pruebadeingreso.domain
 
-import co.com.ceiba.mobile.pruebadeingreso.core.InternetCheck
+import co.com.ceiba.mobile.pruebadeingreso.core.InternetChecker
 import co.com.ceiba.mobile.pruebadeingreso.data.local.UserLocalSource
 import co.com.ceiba.mobile.pruebadeingreso.data.model.Post
 import co.com.ceiba.mobile.pruebadeingreso.data.model.User
@@ -10,18 +10,20 @@ import co.com.ceiba.mobile.pruebadeingreso.data.remote.UserApiSource
 
 class UserRepositoryImpl(
     private val userApiSource: UserApiSource,
-    private val userLocalSource: UserLocalSource
+    private val userLocalSource: UserLocalSource,
+    private val internetChecker: InternetChecker
 ) : UserRepository {
 
     override suspend fun getUserList(): List<User> {
-        return if (InternetCheck.isNetworkAvailable()) {
+        return if (internetChecker.isNetworkAvailable()) {
             if (userLocalSource.getUserList().isNotEmpty()) {
                 userLocalSource.getUserList()
             } else {
-                userApiSource.getUserList().forEach{ user ->
+                val result = userApiSource.getUserList()
+                result.forEach{ user ->
                     userLocalSource.saveUserList(user.toUserEntity())
                 }
-                userLocalSource.getUserList()
+                result
             }
         } else {
             userLocalSource.getUserList()
@@ -30,14 +32,15 @@ class UserRepositoryImpl(
 
     override suspend fun getUserPost(id: Int): List<Post> {
 
-        return if (InternetCheck.isNetworkAvailable()) {
+        return if (internetChecker.isNetworkAvailable()) {
             if (userLocalSource.getUserPost(id).isNotEmpty()){
                 userLocalSource.getUserPost(id)
             } else {
-                userApiSource.getUserPost(id).forEach{ post ->
+                val result = userApiSource.getUserPost(id)
+                result.forEach{ post ->
                     userLocalSource.saveUserPost(post.toPostEntity())
                 }
-                userLocalSource.getUserPost(id)
+                result
             }
         } else {
             userLocalSource.getUserPost(id)

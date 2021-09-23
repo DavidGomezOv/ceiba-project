@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.get
+import co.com.ceiba.mobile.pruebadeingreso.core.InternetCheckerImpl
 import co.com.ceiba.mobile.pruebadeingreso.core.Result
 import co.com.ceiba.mobile.pruebadeingreso.data.local.AppUserDatabase
 import co.com.ceiba.mobile.pruebadeingreso.data.local.UserLocalSource
@@ -17,8 +18,8 @@ import co.com.ceiba.mobile.pruebadeingreso.data.remote.UserApiSource
 import co.com.ceiba.mobile.pruebadeingreso.databinding.ActivityMainBinding
 import co.com.ceiba.mobile.pruebadeingreso.domain.RetrofitClient
 import co.com.ceiba.mobile.pruebadeingreso.domain.UserRepositoryImpl
-import co.com.ceiba.mobile.pruebadeingreso.presentation.MainActivityViewModel
-import co.com.ceiba.mobile.pruebadeingreso.presentation.MainActivityViewModelFactory
+import co.com.ceiba.mobile.pruebadeingreso.presentation.UserViewModel
+import co.com.ceiba.mobile.pruebadeingreso.presentation.UserViewModelFactory
 import co.com.ceiba.mobile.pruebadeingreso.rest.Constants
 import co.com.ceiba.mobile.pruebadeingreso.ui.adapter.MainActivityAdapter
 import co.com.ceiba.mobile.pruebadeingreso.ui.adapter.OnClickListenerCardView
@@ -28,7 +29,7 @@ class MainActivity : AppCompatActivity(), OnClickListenerCardView {
 
     private lateinit var binding: ActivityMainBinding
 
-    private lateinit var mainActivityViewModel: MainActivityViewModel
+    private lateinit var userViewModel: UserViewModel
 
     private lateinit var customLoadingDialog: CustomLoadingDialog
 
@@ -44,11 +45,12 @@ class MainActivity : AppCompatActivity(), OnClickListenerCardView {
     private fun initComponents() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        mainActivityViewModel = ViewModelProvider(
-            this, MainActivityViewModelFactory(
+        userViewModel = ViewModelProvider(
+            this, UserViewModelFactory(
                 UserRepositoryImpl(
                     UserApiSource(RetrofitClient.webService),
-                    UserLocalSource(AppUserDatabase.getDatabase(applicationContext).userDao())
+                    UserLocalSource(AppUserDatabase.getDatabase(applicationContext).userDao()),
+                    InternetCheckerImpl()
                 )
             )
         ).get()
@@ -57,7 +59,7 @@ class MainActivity : AppCompatActivity(), OnClickListenerCardView {
     }
 
     private fun observer() {
-        mainActivityViewModel.getUserList().observe(this, { result ->
+        userViewModel.getUserList().observe(this, { result ->
             when (result) {
                 is Result.Loading -> {
                     customLoadingDialog.showLoadingDialog()

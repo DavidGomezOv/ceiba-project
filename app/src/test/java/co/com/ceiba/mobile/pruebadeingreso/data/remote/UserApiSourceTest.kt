@@ -37,7 +37,7 @@ class UserApiSourceTest : TestCase() {
     )
 
     @Test
-    fun `getUserList() returns a list of User when http call completes successfully`() {
+    fun `getUserList() returns a List of User when http call completes successfully`() {
         runBlocking {
 
             val expect = false
@@ -47,12 +47,12 @@ class UserApiSourceTest : TestCase() {
 
             val result = userApiSource.getUserList()
 
-            assertEquals(result.isEmpty(), expect)
+            assertEquals(expect, result.isEmpty())
         }
     }
 
     @Test
-        fun `getUserPost() returns a list of Post when http call completes successfully`() {
+        fun `getUserPost() returns a List of Post when http call completes successfully`() {
         runBlocking {
 
             val userId = 1
@@ -63,7 +63,7 @@ class UserApiSourceTest : TestCase() {
 
             val result = userApiSource.getUserPost(userId)
 
-            assertEquals(result.isEmpty(), expect)
+            assertEquals(expect, result.isEmpty())
 
         }
     }
