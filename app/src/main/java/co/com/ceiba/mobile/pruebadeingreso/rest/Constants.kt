@@ -5,4 +5,5 @@ object Constants {
     const val GET_USERS = "/users"
     const val GET_POST_USER = "/posts?"
     const val INTENT_KEY = "user"
+    const val DATABASE_NAME = "user_table"
 }
