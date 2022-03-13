@@ -1,13 +1,11 @@
 package co.com.ceiba.mobile.pruebadeingreso.domain
 
 import co.com.ceiba.mobile.pruebadeingreso.core.InternetChecker
-import co.com.ceiba.mobile.pruebadeingreso.data.local.UserLocalSource
 import co.com.ceiba.mobile.pruebadeingreso.data.model.*
 import co.com.ceiba.mobile.pruebadeingreso.data.remote.UserApiSource
 import junit.framework.TestCase
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
-import org.junit.BeforeClass
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.InjectMocks
@@ -20,9 +18,6 @@ class UserRepositoryImplTest : TestCase() {
 
     @Mock
     private lateinit var userApiSource: UserApiSource
-
-    @Mock
-    private lateinit var userLocalSource: UserLocalSource
 
     @Mock
     private lateinit var internetChecker: InternetChecker
@@ -48,7 +43,7 @@ class UserRepositoryImplTest : TestCase() {
 
     @Before
     fun setUpData() {
-        userRepositoryImpl = UserRepositoryImpl(userApiSource, userLocalSource, internetChecker)
+        //userRepositoryImpl = UserRepositoryImpl(userApiSource, userLocalSource, internetChecker)
     }
 
     @Test
@@ -57,7 +52,7 @@ class UserRepositoryImplTest : TestCase() {
             val expect = mutableListOf<User>()
 
             Mockito.`when`(internetChecker.isNetworkAvailable()).thenReturn(false)
-            Mockito.`when`(userLocalSource.getUserList()).thenReturn(mutableListOf())
+            //Mockito.`when`(userLocalSource.getUserList()).thenReturn(mutableListOf())
 
             val result = userRepositoryImpl.getUserList()
 
@@ -72,7 +67,7 @@ class UserRepositoryImplTest : TestCase() {
             val successResponse = createUserResponse()
 
             Mockito.`when`(internetChecker.isNetworkAvailable()).thenReturn(true)
-            Mockito.`when`(userLocalSource.getUserList()).thenReturn(successResponse)
+            //Mockito.`when`(userLocalSource.getUserList()).thenReturn(successResponse)
 
             val result = userRepositoryImpl.getUserList()
 
@@ -87,7 +82,7 @@ class UserRepositoryImplTest : TestCase() {
             val successResponse = createUserResponse()
 
             Mockito.`when`(internetChecker.isNetworkAvailable()).thenReturn(true)
-            Mockito.`when`(userLocalSource.getUserList()).thenReturn(mutableListOf())
+            //Mockito.`when`(userLocalSource.getUserList()).thenReturn(mutableListOf())
             Mockito.`when`(userApiSource.getUserList()).thenReturn(successResponse)
 
             val result = userRepositoryImpl.getUserList()
@@ -104,7 +99,7 @@ class UserRepositoryImplTest : TestCase() {
             val expect = mutableListOf<Post>()
 
             Mockito.`when`(internetChecker.isNetworkAvailable()).thenReturn(false)
-            Mockito.`when`(userLocalSource.getUserPost(userId)).thenReturn(mutableListOf())
+            //Mockito.`when`(userLocalSource.getUserPost(userId)).thenReturn(mutableListOf())
 
             val result = userRepositoryImpl.getUserPost(userId)
 
@@ -120,7 +115,7 @@ class UserRepositoryImplTest : TestCase() {
             val successResponse = createPostResponse()
 
             Mockito.`when`(internetChecker.isNetworkAvailable()).thenReturn(true)
-            Mockito.`when`(userLocalSource.getUserPost(userId)).thenReturn(successResponse)
+            //Mockito.`when`(userLocalSource.getUserPost(userId)).thenReturn(successResponse)
 
             val result = userRepositoryImpl.getUserPost(userId)
 
@@ -136,7 +131,7 @@ class UserRepositoryImplTest : TestCase() {
             val successResponse = createPostResponse()
 
             Mockito.`when`(internetChecker.isNetworkAvailable()).thenReturn(true)
-            Mockito.`when`(userLocalSource.getUserPost(userId)).thenReturn(mutableListOf())
+            // Mockito.`when`(userLocalSource.getUserPost(userId)).thenReturn(mutableListOf())
             Mockito.`when`(userApiSource.getUserPost(userId)).thenReturn(successResponse)
 
             val result = userRepositoryImpl.getUserPost(userId)

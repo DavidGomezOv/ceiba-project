@@ -2,29 +2,23 @@ package co.com.ceiba.mobile.pruebadeingreso.ui
 
 import  android.os.Bundle
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.get
-import co.com.ceiba.mobile.pruebadeingreso.core.InternetCheckerImpl
 import co.com.ceiba.mobile.pruebadeingreso.core.Result
-import co.com.ceiba.mobile.pruebadeingreso.data.local.AppUserDatabase
-import co.com.ceiba.mobile.pruebadeingreso.data.local.UserLocalSource
 import co.com.ceiba.mobile.pruebadeingreso.data.model.User
-import co.com.ceiba.mobile.pruebadeingreso.data.remote.UserApiSource
 import co.com.ceiba.mobile.pruebadeingreso.databinding.ActivityPostBinding
-import co.com.ceiba.mobile.pruebadeingreso.domain.RetrofitClient
-import co.com.ceiba.mobile.pruebadeingreso.domain.UserRepositoryImpl
 import co.com.ceiba.mobile.pruebadeingreso.presentation.UserViewModel
-import co.com.ceiba.mobile.pruebadeingreso.presentation.UserViewModelFactory
 import co.com.ceiba.mobile.pruebadeingreso.rest.Constants
 import co.com.ceiba.mobile.pruebadeingreso.ui.adapter.PostActivityAdapter
 import co.com.ceiba.mobile.pruebadeingreso.ui.utils.CustomLoadingDialog
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class PostActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityPostBinding
 
-    private lateinit var userViewModel: UserViewModel
+    private val userViewModel: UserViewModel by viewModels()
 
     private lateinit var itemUser: User
 
@@ -40,15 +34,6 @@ class PostActivity : AppCompatActivity() {
     private fun initComponents() {
         binding = ActivityPostBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        userViewModel = ViewModelProvider(
-            this, UserViewModelFactory(
-                UserRepositoryImpl(
-                    UserApiSource(RetrofitClient.webService),
-                    UserLocalSource(AppUserDatabase.getDatabase(applicationContext).userDao()),
-                    InternetCheckerImpl()
-                )
-            )
-        ).get()
         customLoadingDialog = CustomLoadingDialog(this)
     }
 
@@ -63,7 +48,7 @@ class PostActivity : AppCompatActivity() {
 
     private fun observer() {
         itemUser.id?.let {
-            userViewModel.getUserPost(it).observe(this, { result ->
+            userViewModel.getUserPost(it).observe(this) { result ->
                 when (result) {
                     is Result.Loading -> {
                         customLoadingDialog.showLoadingDialog()
@@ -81,7 +66,7 @@ class PostActivity : AppCompatActivity() {
                         ).show()
                     }
                 }
-            })
+            }
         }
     }
 }

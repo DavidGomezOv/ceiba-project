@@ -1,14 +1,16 @@
 package co.com.ceiba.mobile.pruebadeingreso.presentation
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.liveData
+import androidx.lifecycle.*
 import co.com.ceiba.mobile.pruebadeingreso.core.Result
 import co.com.ceiba.mobile.pruebadeingreso.domain.UserRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import java.lang.Exception
+import javax.inject.Inject
 
-class UserViewModel(private val repository: UserRepository): ViewModel() {
+@HiltViewModel
+class UserViewModel @Inject constructor (private val repository: UserRepository): ViewModel() {
+
 
     fun getUserList() = liveData(Dispatchers.IO) {
         emit(Result.Loading())
@@ -27,14 +29,5 @@ class UserViewModel(private val repository: UserRepository): ViewModel() {
             emit(Result.Failed(e))
         }
     }
-
-}
-
-class UserViewModelFactory(private val repository: UserRepository) : ViewModelProvider.Factory {
-
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return modelClass.getConstructor(UserRepository::class.java).newInstance(repository)
-    }
-
 
 }
