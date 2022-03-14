@@ -1,10 +1,10 @@
-package co.com.ceiba.mobile.pruebadeingreso.view;
+package co.com.ceiba.mobile.pruebadeingreso.ui;
 
 
 import androidx.test.espresso.ViewInteraction;
+import androidx.test.filters.LargeTest;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import android.test.suitebuilder.annotation.LargeTest;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
